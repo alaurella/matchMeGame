@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperatura en Farenheit y Celsius</title>
+    <script>
+
+          function getRandom(num){
+
+          document.getElementById("div1").innerHTML = "<br />" + Math.floor(num*Math.random());
+          }
+
+          function getRandomFile()
+          { 
+            const fs = require('fs');
+            var files = fs.readdirSync('./images/');
+            var file = files[ Math.floor(files.length*Math.random())];
+            document.getElementById("div1").innerHTML = file;
+
+          }
+
+    </script>
+</head>
+<body>
+    
+    <p>Este ejemplo carga un número aleatorio entre 0 y 10</p>
+    <input type="button" onclick="getRandomFile()" value="Probar" />
+
+    <p>Listado de resultados:</p>
+    <div id="div1"></div>
+</body>
+</html>
