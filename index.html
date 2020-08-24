@@ -3,31 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temperatura en Farenheit y Celsius</title>
+    <title>Cual es</title>
+    <style>
+      table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        table-layout: fixed;
+        width: 150px;
+        height: 150px;
+      }
+
+      </style>
     <script>
+          var image_quatity = 16 
+          var sizes = ["100","75","50"];
+          var angles = ["0","90","180","275"]
 
           function getRandom(num){
 
-          document.getElementById("div1").innerHTML = "<br />" + Math.floor(num*Math.random());
+          return  Math.floor(num*Math.random());
           }
 
-          function getRandomFile()
-          { 
-            const fs = require('fs');
-            var files = fs.readdirSync('./images/');
-            var file = files[ Math.floor(files.length*Math.random())];
-            document.getElementById("div1").innerHTML = file;
+          function getRandomSize()
+          {
+            return  sizes[getRandom(sizes.length)];
+          }
 
+          function getRandomAngle()
+          {
+            return  angles[getRandom(angles.length)];
+          }
+          
+          function fillEachTable(numTable)
+          {
+
+            var baseFileName;
+            var size;
+            var angle;
+            var fileNumber;
+            var i;
+            var usedList = [];
+
+            for (i = 1; i < 10; i++) {
+              
+              while(usedList.length < image_quatity)
+              {
+                baseFileName = String(getRandom(image_quatity)).padStart(2, '0');
+                 if (!usedList.includes(baseFileName))
+                 {
+                  usedList[usedList.length] = baseFileName;
+                  break;
+                 } 
+                    
+              }
+              size = getRandomSize();
+              angle = getRandomAngle();
+              document.getElementById("img"+(i+(numTable*9))).src = "./images/" + baseFileName + ".png";
+              document.getElementById("img"+(i+(numTable*9))).height = size;
+              document.getElementById("img"+(i+(numTable*9))).width = size;
+              document.getElementById("img"+(i+(numTable*9))).style.transform = "rotate("+ angle + "deg)";
+            }
+
+          }
+
+          function fillTables()
+          { 
+            fillEachTable(0);
+            fillEachTable(1);
+            
           }
 
     </script>
 </head>
 <body>
+  <div id="div1">
+    <p>¿Cual es?</p>
+    <input type="button" onclick="fillTables()" value="Probar" />
+  </div> 
+  <div>
+    <table style="float: left">
+      <tr>
+        <td><img id="img1" src="./images/100.png"/></td>
+        <td><img id="img2" src="./images/100.png"/></td>
+        <td><img id="img3" src="./images/100.png"/></td>
+      </tr>
+      <tr>
+        <td><img id="img4" src="./images/100.png"/></td>
+        <td><img id="img5" src="./images/100.png"/></td>
+        <td><img id="img6" src="./images/100.png"/></td>
+      </tr>
+      <tr>
+        <td><img id="img7" src="./images/100.png"/></td>
+        <td><img id="img8" src="./images/100.png"/></td>
+        <td><img id="img9" src="./images/100.png"/></td>
+      </tr>
+    </table>
+    <table style="float: left">
+      <tr>
+        <td><img id="img10" src="./images/100.png"/></td>
+        <td><img id="img11" src="./images/100.png"/></td>
+        <td><img id="img12" src="./images/100.png"/></td>
+      </tr>
+      <tr>
+        <td><img id="img13" src="./images/100.png"/></td>
+        <td><img id="img14" src="./images/100.png"/></td>
+        <td><img id="img15" src="./images/100.png"/></td>
+      </tr>
+      <tr>
+        <td><img id="img16" src="./images/100.png"/></td>
+        <td><img id="img17" src="./images/100.png"/></td>
+        <td><img id="img18" src="./images/100.png"/></td>
+      </tr>
+    </table>
+  </div>
     
-    <p>Este ejemplo carga un número aleatorio entre 0 y 10</p>
-    <input type="button" onclick="getRandomFile()" value="Probar" />
-
-    <p>Listado de resultados:</p>
-    <div id="div1"></div>
 </body>
 </html>
