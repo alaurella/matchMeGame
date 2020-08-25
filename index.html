@@ -5,22 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cual es</title>
     <style>
-      table, th, td {
-        border: 1px solid black;
+      table {
+        border: 2px solid black;
         border-collapse: collapse;
-        table-layout: fixed;
-        width: 150px;
-        height: 150px;
+              
       }
-
-      </style>
+    </style>
     <script>
-          var image_quatity = 16 
+          var image_quatity = 48
           var sizes = ["100","75","50"];
-          var angles = ["0","90","180","275"]
+          var angles = ["0","90","180","270"]
+          var usedList;
+          var table1Equal;
+          var table2Equal;
+          var baseNameRepeated;
+          var result = false;
+          var failSound = new Audio('./sounds/failSound.mp3');
+          var winSound = new Audio('./sounds/winSound.mp3');
+
 
           function getRandom(num){
-
           return  Math.floor(num*Math.random());
           }
 
@@ -33,7 +37,7 @@
           {
             return  angles[getRandom(angles.length)];
           }
-          
+
           function fillEachTable(numTable)
           {
 
@@ -42,23 +46,39 @@
             var angle;
             var fileNumber;
             var i;
-            var usedList = [];
+            
+            if (numTable == 0)
+            {
+              usedList = [];
+              table1Equal = getRandom(9) + 1;
+              table2Equal = getRandom(9) + 1;
+              baseNameRepeated = String(getRandom(image_quatity)).padStart(2, '0');
+              usedList[usedList.length] = baseNameRepeated;
+            }
 
             for (i = 1; i < 10; i++) {
               
-              while(usedList.length < image_quatity)
+              while(usedList.length < image_quatity && !(numTable == 0 && i == table1Equal) && !(numTable == 1 && i == table2Equal))
               {
                 baseFileName = String(getRandom(image_quatity)).padStart(2, '0');
                  if (!usedList.includes(baseFileName))
                  {
                   usedList[usedList.length] = baseFileName;
                   break;
-                 } 
-                    
+                 }
+           
               }
               size = getRandomSize();
               angle = getRandomAngle();
-              document.getElementById("img"+(i+(numTable*9))).src = "./images/" + baseFileName + ".png";
+              if( (numTable == 0 && i == table1Equal) || (numTable == 1 && i == table2Equal) )
+                {
+                  document.getElementById("img"+(i+(numTable*9))).src = "./images/" + baseNameRepeated + ".png";
+                }
+                else
+                {
+                  document.getElementById("img"+(i+(numTable*9))).src = "./images/" + baseFileName + ".png";
+                }
+
               document.getElementById("img"+(i+(numTable*9))).height = size;
               document.getElementById("img"+(i+(numTable*9))).width = size;
               document.getElementById("img"+(i+(numTable*9))).style.transform = "rotate("+ angle + "deg)";
@@ -70,8 +90,16 @@
           { 
             fillEachTable(0);
             fillEachTable(1);
-            
           }
+
+          function checkRepeated(id)
+          {
+            result = (id == "img"+table1Equal || id == "img"+ (table2Equal+9));
+            alert(result);
+
+          }
+
+         
 
     </script>
 </head>
@@ -79,43 +107,45 @@
   <div id="div1">
     <p>¿Cual es?</p>
     <input type="button" onclick="fillTables()" value="Probar" />
+    <input type="button" onclick="winSound.play()" value="Win Sound" />
+    <input type="button" onclick="failSound.play()" value="Fail Sound" />
+    
   </div> 
   <div>
-    <table style="float: left">
+    <table style="float: left" >
       <tr>
-        <td><img id="img1" src="./images/100.png"/></td>
-        <td><img id="img2" src="./images/100.png"/></td>
-        <td><img id="img3" src="./images/100.png"/></td>
+        <td align="center"><img id="img1" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+        <td align="center"><img id="img2" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+        <td align="center"><img id="img3" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
       </tr>
       <tr>
-        <td><img id="img4" src="./images/100.png"/></td>
-        <td><img id="img5" src="./images/100.png"/></td>
-        <td><img id="img6" src="./images/100.png"/></td>
+        <td align="center"><img id="img4" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+        <td align="center"><img id="img5" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+        <td align="center"><img id="img6" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
       </tr>
       <tr>
-        <td><img id="img7" src="./images/100.png"/></td>
-        <td><img id="img8" src="./images/100.png"/></td>
-        <td><img id="img9" src="./images/100.png"/></td>
+        <td align="center"><img id="img7" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+        <td align="center"><img id="img8" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+        <td align="center"><img id="img9" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
       </tr>
     </table>
-    <table style="float: left">
+    <table style="float: right">
       <tr>
-        <td><img id="img10" src="./images/100.png"/></td>
-        <td><img id="img11" src="./images/100.png"/></td>
-        <td><img id="img12" src="./images/100.png"/></td>
+        <td align="center"><img id="img10" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+        <td align="center"><img id="img11" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+        <td align="center"><img id="img12" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
       </tr>
       <tr>
-        <td><img id="img13" src="./images/100.png"/></td>
-        <td><img id="img14" src="./images/100.png"/></td>
-        <td><img id="img15" src="./images/100.png"/></td>
+        <td align="center"><img id="img13" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+        <td align="center"><img id="img14" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+        <td align="center"><img id="img15" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
       </tr>
       <tr>
-        <td><img id="img16" src="./images/100.png"/></td>
-        <td><img id="img17" src="./images/100.png"/></td>
-        <td><img id="img18" src="./images/100.png"/></td>
+        <td align="center"><img id="img16" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+        <td align="center"><img id="img17" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+        <td align="center"><img id="img18" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
       </tr>
     </table>
   </div>
-    
 </body>
 </html>
