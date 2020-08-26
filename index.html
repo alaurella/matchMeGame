@@ -6,24 +6,45 @@
     <title>Cual es</title>
     <style>
       table {
-        border: 2px solid black;
+        border: 1px solid black;
         border-collapse: collapse;
-              
       }
+    
     </style>
     <script>
-          var image_quatity = 48
+          var image_quatity = 48;
+          var countDownDuration = 20;
+          var maxScorePerRound = 100;
+          var numberOfRounds = 10;
+          var penalty = 20;
+
           var sizes = ["100","75","50"];
-          var angles = ["0","90","180","270"]
+          var angles = ["0","90","180","270"];
           var usedList;
           var table1Equal;
           var table2Equal;
           var baseNameRepeated;
+          var currentScore;
+          var currentRound;
+          var timeLeft;
+          var timer;
           var result = false;
+          var gameStarted = false;
+          var gamePaused = false;
           var failSound = new Audio('./sounds/failSound.mp3');
           var winSound = new Audio('./sounds/winSound.mp3');
+          var gameOverSound = new Audio('./sounds/gameOverSound.mp3');
 
+          function hideMessage() {
+              document.getElementById("divMessage").style.display = "none";
+          }
 
+          function showMessage() {
+
+            document.getElementById("divMessage").style.display = "block";
+           
+          }
+           
           function getRandom(num){
           return  Math.floor(num*Math.random());
           }
@@ -86,31 +107,135 @@
 
           }
 
-          function fillTables()
-          { 
-            fillEachTable(0);
-            fillEachTable(1);
-          }
-
           function checkRepeated(id)
           {
-            result = (id == "img"+table1Equal || id == "img"+ (table2Equal+9));
-            alert(result);
+            if (timeLeft > 0 && gameStarted && !gamePaused)
+            {
+              result = (id == "img"+table1Equal || id == "img"+ (table2Equal+9));
+              if (result)
+              {
+                winSound.play();
+                currentScore = currentScore + maxScorePerRound * timeLeft / countDownDuration;
+                
+              }
+              else
+              {
+                failSound.play();
+                timeLeft = 0;
+
+                if (currentScore > penalty)
+                  currentScore = currentScore - penalty;
+                else
+                  currentScore = 0;
+
+              }
+              document.getElementById("score").innerHTML = currentScore;
+              startRound();
+            }
 
           }
 
-         
+          function startRound()
+          {
+            if (!gameStarted || gamePaused) return;
+            if (currentRound < numberOfRounds)
+            { 
+              currentRound = currentRound + 1;
+              document.getElementById("round").innerHTML = currentRound;
+              fillEachTable(0);
+              fillEachTable(1);
+              timeLeft = countDownDuration;
+              if (timer != null) clearInterval(timer);
+              timer = setInterval(function() {
 
+                  if (gamePaused) return;
+                  document.getElementById("timeLeft").innerHTML = timeLeft;
+
+                  timeLeft = timeLeft - 1;
+
+                  if (timeLeft < 0) {
+                      clearInterval(timer);
+                      document.getElementById("timeLeft").innerHTML = "0";
+                      failSound.play();
+                      startRound();
+                  }
+              }, 1000);
+            }
+            else
+            {
+              finish();
+            }
+
+          }
+
+
+          function start()
+          {
+            hideMessage();
+            currentScore = 0;
+            currentRound = 0;
+            gameStarted = true;
+            gamePaused = false;
+            document.getElementById("pause").value = "Pause";
+            document.getElementById("start").value = "Reset";
+            document.getElementById("score").innerHTML = currentScore;
+            document.getElementById("timeLeft").innerHTML = countDownDuration;
+            if (timer != null) clearInterval(timer);
+            startRound();
+             
+          }
+
+          function pause()
+          {
+            if (gamePaused)
+            {
+              gamePaused = false;
+              document.getElementById("pause").value = "Pause";
+            }
+            else
+            {
+              gamePaused = true;
+              document.getElementById("pause").value = "Resume";
+            }
+
+          }
+
+          function finish()
+          {
+            if (timer != null) clearInterval(timer);
+            gameStarted = false;
+            document.getElementById("start").value = "Start";
+            document.getElementById("message").innerHTML = "GAME OVER";
+            showMessage();
+            gameOverSound.play();
+          }
     </script>
 </head>
 <body>
-  <div id="div1">
-    <p>¿Cual es?</p>
-    <input type="button" onclick="fillTables()" value="Probar" />
-    <input type="button" onclick="winSound.play()" value="Win Sound" />
-    <input type="button" onclick="failSound.play()" value="Fail Sound" />
+  <div>
+    <h1 align="center">Which one is repeated ?</h1>
+  </div>
+  <div  align="center">
+      <input type="button" onclick="start()" value="Start" id="start"/>
+      <input type="button" onclick="pause()" value="Pause" id="pause"/>
+  </div> 
+  <div>
+    <table align="center" style="width: 100%">
+      <tr>
+        <td align="center"><h3>Left Time</h3></td>
+        <td align="center"><h3>Score</h3></td>
+        <td align="center"><h3>Round</h3></td>
+      </tr>
+      <tr>
+        <td align="center"><h2 id="timeLeft">--</h2> </td>
+        <td align="center"><h2 id="score">--</h2></td>
+        <td align="center"><h2 id="round">--</h2> </td>
+      </tr>
     
   </div> 
+  <div id="divMessage"  align="center" style="width: 100%">
+    <h1 id="message">PRESS START</h1>
+  </div>  
   <div>
     <table style="float: left" >
       <tr>
@@ -147,5 +272,9 @@
       </tr>
     </table>
   </div>
+</div>
+
+
+
 </body>
 </html>
