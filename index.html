@@ -1,280 +1,90 @@
+<!--
+* This game is intended to find the repeated image from a bunch of different 18 ones.
+* there are a bunch of random images that suddenly appear on screen, and only one of
+* those images are repeated. The player has 20 seconds to find, as soon as possible,
+* the duplicated imagen and click it.
+
+*Version 0
+*Original Author: Ariel Laurella.
+*Last Updated: 2020-08-26
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cual es</title>
+    <title>MatchMe</title>
     <style>
       table {
         border: 1px solid black;
         border-collapse: collapse;
       }
-    
     </style>
-    <script>
-          var image_quatity = 48;
-          var countDownDuration = 20;
-          var maxScorePerRound = 100;
-          var numberOfRounds = 10;
-          var penalty = 20;
-
-          var sizes = ["100","75","50"];
-          var angles = ["0","90","180","270"];
-          var usedList;
-          var table1Equal;
-          var table2Equal;
-          var baseNameRepeated;
-          var currentScore;
-          var currentRound;
-          var timeLeft;
-          var timer;
-          var result = false;
-          var gameStarted = false;
-          var gamePaused = false;
-          var failSound = new Audio('./sounds/failSound.mp3');
-          var winSound = new Audio('./sounds/winSound.mp3');
-          var gameOverSound = new Audio('./sounds/gameOverSound.mp3');
-
-          function hideMessage() {
-              document.getElementById("divMessage").style.display = "none";
-          }
-
-          function showMessage() {
-
-            document.getElementById("divMessage").style.display = "block";
-           
-          }
-           
-          function getRandom(num){
-          return  Math.floor(num*Math.random());
-          }
-
-          function getRandomSize()
-          {
-            return  sizes[getRandom(sizes.length)];
-          }
-
-          function getRandomAngle()
-          {
-            return  angles[getRandom(angles.length)];
-          }
-
-          function fillEachTable(numTable)
-          {
-
-            var baseFileName;
-            var size;
-            var angle;
-            var fileNumber;
-            var i;
-            
-            if (numTable == 0)
-            {
-              usedList = [];
-              table1Equal = getRandom(9) + 1;
-              table2Equal = getRandom(9) + 1;
-              baseNameRepeated = String(getRandom(image_quatity)).padStart(2, '0');
-              usedList[usedList.length] = baseNameRepeated;
-            }
-
-            for (i = 1; i < 10; i++) {
-              
-              while(usedList.length < image_quatity && !(numTable == 0 && i == table1Equal) && !(numTable == 1 && i == table2Equal))
-              {
-                baseFileName = String(getRandom(image_quatity)).padStart(2, '0');
-                 if (!usedList.includes(baseFileName))
-                 {
-                  usedList[usedList.length] = baseFileName;
-                  break;
-                 }
-           
-              }
-              size = getRandomSize();
-              angle = getRandomAngle();
-              if( (numTable == 0 && i == table1Equal) || (numTable == 1 && i == table2Equal) )
-                {
-                  document.getElementById("img"+(i+(numTable*9))).src = "./images/" + baseNameRepeated + ".png";
-                }
-                else
-                {
-                  document.getElementById("img"+(i+(numTable*9))).src = "./images/" + baseFileName + ".png";
-                }
-
-              document.getElementById("img"+(i+(numTable*9))).height = size;
-              document.getElementById("img"+(i+(numTable*9))).width = size;
-              document.getElementById("img"+(i+(numTable*9))).style.transform = "rotate("+ angle + "deg)";
-            }
-
-          }
-
-          function checkRepeated(id)
-          {
-            if (timeLeft > 0 && gameStarted && !gamePaused)
-            {
-              result = (id == "img"+table1Equal || id == "img"+ (table2Equal+9));
-              if (result)
-              {
-                winSound.play();
-                currentScore = currentScore + maxScorePerRound * timeLeft / countDownDuration;
-                
-              }
-              else
-              {
-                failSound.play();
-                timeLeft = 0;
-
-                if (currentScore > penalty)
-                  currentScore = currentScore - penalty;
-                else
-                  currentScore = 0;
-
-              }
-              document.getElementById("score").innerHTML = currentScore;
-              startRound();
-            }
-
-          }
-
-          function startRound()
-          {
-            if (!gameStarted || gamePaused) return;
-            if (currentRound < numberOfRounds)
-            { 
-              currentRound = currentRound + 1;
-              document.getElementById("round").innerHTML = currentRound;
-              fillEachTable(0);
-              fillEachTable(1);
-              timeLeft = countDownDuration;
-              if (timer != null) clearInterval(timer);
-              timer = setInterval(function() {
-
-                  if (gamePaused) return;
-                  document.getElementById("timeLeft").innerHTML = timeLeft;
-
-                  timeLeft = timeLeft - 1;
-
-                  if (timeLeft < 0) {
-                      clearInterval(timer);
-                      document.getElementById("timeLeft").innerHTML = "0";
-                      failSound.play();
-                      startRound();
-                  }
-              }, 1000);
-            }
-            else
-            {
-              finish();
-            }
-
-          }
-
-
-          function start()
-          {
-            hideMessage();
-            currentScore = 0;
-            currentRound = 0;
-            gameStarted = true;
-            gamePaused = false;
-            document.getElementById("pause").value = "Pause";
-            document.getElementById("start").value = "Reset";
-            document.getElementById("score").innerHTML = currentScore;
-            document.getElementById("timeLeft").innerHTML = countDownDuration;
-            if (timer != null) clearInterval(timer);
-            startRound();
-             
-          }
-
-          function pause()
-          {
-            if (gamePaused)
-            {
-              gamePaused = false;
-              document.getElementById("pause").value = "Pause";
-            }
-            else
-            {
-              gamePaused = true;
-              document.getElementById("pause").value = "Resume";
-            }
-
-          }
-
-          function finish()
-          {
-            if (timer != null) clearInterval(timer);
-            gameStarted = false;
-            document.getElementById("start").value = "Start";
-            document.getElementById("message").innerHTML = "GAME OVER";
-            showMessage();
-            gameOverSound.play();
-          }
-    </script>
+    <script src="./scripts/scripts.js"></script>
 </head>
 <body>
   <div>
-    <h1 align="center">Which one is repeated ?</h1>
-  </div>
-  <div  align="center">
-      <input type="button" onclick="start()" value="Start" id="start"/>
-      <input type="button" onclick="pause()" value="Pause" id="pause"/>
-  </div> 
-  <div>
-    <table align="center" style="width: 100%">
-      <tr>
-        <td align="center"><h3>Left Time</h3></td>
-        <td align="center"><h3>Score</h3></td>
-        <td align="center"><h3>Round</h3></td>
-      </tr>
-      <tr>
-        <td align="center"><h2 id="timeLeft">--</h2> </td>
-        <td align="center"><h2 id="score">--</h2></td>
-        <td align="center"><h2 id="round">--</h2> </td>
-      </tr>
-    
-  </div> 
-  <div id="divMessage"  align="center" style="width: 100%">
-    <h1 id="message">PRESS START</h1>
-  </div>  
-  <div>
-    <table style="float: left" >
-      <tr>
-        <td align="center"><img id="img1" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
-        <td align="center"><img id="img2" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
-        <td align="center"><img id="img3" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
-      </tr>
-      <tr>
-        <td align="center"><img id="img4" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
-        <td align="center"><img id="img5" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
-        <td align="center"><img id="img6" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
-      </tr>
-      <tr>
-        <td align="center"><img id="img7" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
-        <td align="center"><img id="img8" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
-        <td align="center"><img id="img9" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
-      </tr>
-    </table>
-    <table style="float: right">
-      <tr>
-        <td align="center"><img id="img10" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
-        <td align="center"><img id="img11" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
-        <td align="center"><img id="img12" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
-      </tr>
-      <tr>
-        <td align="center"><img id="img13" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
-        <td align="center"><img id="img14" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
-        <td align="center"><img id="img15" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
-      </tr>
-      <tr>
-        <td align="center"><img id="img16" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
-        <td align="center"><img id="img17" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
-        <td align="center"><img id="img18" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
-      </tr>
-    </table>
+    <div>
+      <h1 align="center">Which one is repeated ?</h1>
+    </div>
+    <div  align="center">
+        <input type="button" onclick="start()" value="Start" id="start"/>
+    </div> 
+    <div id="divMessage"  align="center">
+      <h1 id="message">Click on the repeated image. PRESS START</h1>
+    </div>  
+    <div>
+      <table align="center" style="width: 100%">
+        <tr>
+          <td align="center"><h3>Left Time</h3></td>
+          <td align="center"><h3>Score</h3></td>
+          <td align="center"><h3>Round</h3></td>
+        </tr>
+        <tr>
+          <td align="center"><h2 id="timeLeft">--</h2> </td>
+          <td align="center"><h2 id="score">--</h2></td>
+          <td align="center"><h2 id="round">--</h2> </td>
+        </tr>
+      </table>
+    </div> 
+    <div>
+      <table style="float: left">
+        <tr>
+          <td align="center"><img id="img1" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+          <td align="center"><img id="img2" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+          <td align="center"><img id="img3" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+        </tr>
+        <tr>
+          <td align="center"><img id="img4" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+          <td align="center"><img id="img5" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+          <td align="center"><img id="img6" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+        </tr>
+        <tr>
+          <td align="center"><img id="img7" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+          <td align="center"><img id="img8" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+          <td align="center"><img id="img9" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+        </tr>
+      </table>
+      <table style="float: right">
+        <tr>
+          <td align="center"><img id="img10" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+          <td align="center"><img id="img11" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+          <td align="center"><img id="img12" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+        </tr>
+        <tr>
+          <td align="center"><img id="img13" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+          <td align="center"><img id="img14" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+          <td align="center"><img id="img15" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+        </tr>
+        <tr>
+          <td align="center"><img id="img16" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+          <td align="center"><img id="img17" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+          <td align="center"><img id="img18" src="./images/100.png" onclick="checkRepeated(this.id)"/></td>
+        </tr>
+      </table>
+    </div>
   </div>
 </div>
-
-
-
 </body>
 </html>
