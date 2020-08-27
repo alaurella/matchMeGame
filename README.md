@@ -5,8 +5,8 @@ Last Updated: 2020-08-26
 
 ####Objective
 
-This game is intended to find the repeated image from a bunch of different 18 ones. There are a bunch of random images that suddenly appear on screen,
-and only one of those images are repeated. The player has 20 seconds to find, as soon as possible, the duplicated imagen and click it.
+This game is intended to find the repeated image from a bunch of different 18 ones. There is a bunch of random images that suddenly appear on screen,
+and only one of those images is repeated. The player has 20 seconds to find, as soon as possible, the duplicated image and click it.
    
 
 ##Appropriate use case  
